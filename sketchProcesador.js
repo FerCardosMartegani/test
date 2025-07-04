@@ -61,6 +61,7 @@ function draw() {
     }
     amplitudPromedio = promedio(amplitudes);
 
+    textAlign(LEFT, CENTER);
     text("crudo: " + amplitudCruda, 10, 10);
     text("max: " + amplitudMax, 10, 30);
     text("promedio: " + amplitudPromedio, 10, 50);
@@ -69,6 +70,7 @@ function draw() {
     text("output: " + getOutputVolume(), 10, 110);
 
     // -------------------------------------------------Rotación del teléfono
+    textAlign(RIGHT, CENTER);
     text("Rotación X: " + rotationX, width - 10, 10);
     text("Rotación Y: " + rotationY, width - 10, 30);
     text("Rotación Z: " + rotationZ, width - 10, 50);
