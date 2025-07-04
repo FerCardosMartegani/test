@@ -69,9 +69,9 @@ function draw() {
     text("output: " + getOutputVolume(), 10, 110);
 
     // -------------------------------------------------Rotación del teléfono
-    text("Rotación X: " + accelerationX.toFixed(2), 10, height - 50);
-    text("Rotación Y: " + accelerationY.toFixed(2), 10, height - 30);
-    text("Rotación Z: " + accelerationZ.toFixed(2), 10, height - 10);
+    text("Rotación X: " + rotationX, 10, height - 50);
+    text("Rotación Y: " + rotationY, 10, height - 30);
+    text("Rotación Z: " + rotationZ, 10, height - 10);
 
     if (speaking) {
       fill(200);
