@@ -1,6 +1,6 @@
 let mic, speaking, VAD;
 let audios, cantAudios, nivelDeCaos, nivelCambio;
-let debug;
+let debug, permisoDeSensor;
 let amplitudMax, amplitudCambio, amplitudes, amplitudPromedio;
 const CAMBIONIVEL = 0.2;
 
@@ -26,7 +26,7 @@ function setup() {
   tiempoMax = TIEMPO * frameRate();
   nivelDeCaos = 3;
   nivelCambio = 0;
-  debug = false;
+  debug = permisoDeSensor = false;
 
   initVAD();
 }
@@ -74,8 +74,9 @@ function draw() {
     text("Rotación X: " + rotationX, width - 10, 10);
     text("Rotación Y: " + rotationY, width - 10, 30);
     text("Rotación Z: " + rotationZ, width - 10, 50);
+    text("Permiso: " + permisoDeSensor, width - 10, 70);
     if (abs(rotationX) < 10 && abs(rotationY) < 10) {
-      text("¡Dispositivo está apoyado boca arriba!", width - 10, 70);
+      text("Bocarriba", width - 10, 90);
     }
 
     if (speaking) {
@@ -146,6 +147,7 @@ function verificar() {
 // --------------------------------------------------------------------------MOUSE
 function mouseClicked() {
   console.log("Clicked");
+
   debug = !debug;
 }
 
@@ -156,8 +158,10 @@ function touchStarted() {
       .then(response => {
         if (response === 'granted') {
           console.log("Permiso de movimiento");
+          permisoDeSensor = true;
         } else {
           console.log("SIN permiso de movimiento");
+          permisoDeSensor = false;
         }
       })
       .catch(console.error);
