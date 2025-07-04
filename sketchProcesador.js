@@ -146,9 +146,27 @@ function verificar() {
 // --------------------------------------------------------------------------MOUSE
 function mouseClicked() {
   console.log("Clicked");
-
   debug = !debug;
+}
 
+function touchStarted() {
+  if (typeof DeviceMotionEvent !== 'undefined' &&
+      typeof DeviceMotionEvent.requestPermission === 'function') {
+    DeviceMotionEvent.requestPermission()
+      .then(response => {
+        if (response === 'granted') {
+          console.log("Permiso de movimiento");
+        } else {
+          console.log("SIN permiso de movimiento");
+        }
+      })
+      .catch(console.error);
+  } else {
+    // En otros navegadores (como Android Firefox o computadoras), no se necesita
+    console.log("Permiso no necesario en este navegador");
+  }
+
+  // También activamos audio si es necesario
   getAudioContext().resume();
 }
 
