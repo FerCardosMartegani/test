@@ -18,7 +18,7 @@ function preload() {
 
 // -------------------------------------------------------------------------- SETUP
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(windowWidth, windowHeight);
 
   speaking = false;
   tiempo = amplitudMax = amplitudCambio = amplitudPromedio = -1;
