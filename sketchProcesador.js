@@ -2,7 +2,7 @@ let mic, speaking, VAD;
 let audios, cantAudios, nivelDeCaos, nivelCambio;
 let debug;
 let amplitudMax, amplitudCambio, amplitudes, amplitudPromedio;
-const CAMBIONIVEL = 0.01;
+const CAMBIONIVEL = 0.2;
 
 let tiempo, tiempoMax;
 const TIEMPO = 3;
@@ -67,6 +67,11 @@ function draw() {
     text(speaking ? "Habla" : "No habla", 10, 70);
     text("nivel: " + nivelDeCaos + " + " + nivelCambio, 10, 90);
     text("output: " + getOutputVolume(), 10, 110);
+
+    // -------------------------------------------------Rotación del teléfono
+    text("Rotación X: " + rotationX.toFixed(2), 10, height - 50);
+    text("Rotación Y: " + rotationY.toFixed(2), 10, height - 30);
+    text("Rotación Z: " + rotationZ.toFixed(2), 10, height - 10);
 
     if (speaking) {
       fill(200);
