@@ -1,7 +1,11 @@
 let mic, speaking, VAD;
 let audios, cantAudios, nivelDeCaos, nivelCambio;
 let debug, permisoDeSensor;
-let amplitudMax, amplitudCambio, amplitudes, amplitudPromedio;
+let amplitudMax,
+  amplitudCambio,
+  amplitudes,
+  amplitudPromedioVoz,
+  amplitudPromedioSinVoz;
 const CAMBIONIVEL = 0.15;
 
 let tiempo, tiempoMax;
@@ -21,7 +25,12 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
 
   speaking = false;
-  tiempo = amplitudMax = amplitudCambio = amplitudPromedio = -1;
+  tiempo =
+    amplitudMax =
+    amplitudCambio =
+    amplitudPromedioVoz =
+    amplitudPromedioSinVoz =
+      -1;
   amplitudes = [];
   tiempoMax = TIEMPO * frameRate();
   nivelDeCaos = 3;
@@ -59,12 +68,16 @@ function draw() {
     } else {
       amplitudMax = lerp(amplitudMax, amplitudCruda, 0.05); //el máximo se reduce de a poco
     }
-    amplitudPromedio = promedio(amplitudes);
+    if (speaking) {
+      amplitudPromedioVoz = promedio(amplitudes);
+    } else {
+      amplitudPromedioSinVoz = promedio(amplitudes);
+    }
 
     textAlign(LEFT, CENTER);
-    text("crudo: " + amplitudCruda, 10, 10);
-    text("max: " + amplitudMax, 10, 30);
-    text("promedio: " + amplitudPromedio, 10, 50);
+    text("fondo: " + amplitudPromedioSinVoz, 10, 10);
+    text("total: " + amplitudPromedioVoz, 10, 30);
+    text("diferencia: " + abs(amplitudPromedioVoz - amplitudPromedioSinVoz), 10, 50);
     text("Umbral: " + CAMBIONIVEL, 10, 70);
     text(speaking ? "Habla" : "No habla", 10, 90);
     text("nivel: " + nivelDeCaos + " + " + nivelCambio, 10, 110);
@@ -152,11 +165,13 @@ function mouseClicked() {
 }
 
 function touchStarted() {
-  if (typeof DeviceMotionEvent !== 'undefined' &&
-      typeof DeviceMotionEvent.requestPermission === 'function') {
+  if (
+    typeof DeviceMotionEvent !== "undefined" &&
+    typeof DeviceMotionEvent.requestPermission === "function"
+  ) {
     DeviceMotionEvent.requestPermission()
-      .then(response => {
-        if (response === 'granted') {
+      .then((response) => {
+        if (response === "granted") {
           console.log("Permiso de movimiento");
           permisoDeSensor = true;
         } else {
@@ -188,7 +203,7 @@ function promedio(a_) {
 function nivelVoz() {
   let incremento = 0.5;
 
-  if (amplitudPromedio > CAMBIONIVEL) {
+  if (amplitudPromedioVoz > CAMBIONIVEL) {
     nivelCambio = +incremento;
   } else {
     nivelCambio = -incremento;
