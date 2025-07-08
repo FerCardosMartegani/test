@@ -7,6 +7,7 @@ let amplitudMax,
   amplitudPromedioVoz,
   amplitudPromedioFondo;
 const CAMBIONIVEL = 0.035;
+const INCREMENTO = 0.5;
 
 let tiempo, tiempoMax;
 const TIEMPO = 3;
@@ -33,7 +34,7 @@ function setup() {
       -1;
   amplitudes = [];
   tiempoMax = TIEMPO * frameRate();
-  nivelDeCaos = 3;
+  nivelDeCaos = 4;
   nivelCambio = 0;
   debug = permisoDeSensor = false;
 
@@ -57,8 +58,12 @@ function draw() {
     }
   }
 
-  push();
-  if (mic != undefined && VAD != undefined) {
+  if (
+    mic != undefined &&
+    VAD != undefined &&
+    abs(rotationX) < 0.5 &&
+    abs(rotationY) < 0.5
+  ) {
     verificar();
 
     // -------------------------------------------------Cálculos con la amplitud registrada
@@ -77,6 +82,7 @@ function draw() {
     }
     amplitudCambio = abs(amplitudPromedioVoz - amplitudPromedioFondo);
 
+    push();
     textAlign(LEFT, CENTER);
     text("fondo: " + amplitudPromedioFondo, 10, 10);
     text("total: " + amplitudPromedioVoz, 10, 30);
@@ -91,19 +97,10 @@ function draw() {
     text("Rotación Y: " + nf(rotationY, 1, 2), width - 10, 30);
     text("Rotación Z: " + nf(rotationZ, 1, 2), width - 10, 50);
     text("Permiso: " + permisoDeSensor, width - 10, 70);
-    if (abs(rotationX) < 10 && abs(rotationY) < 10) {
+    if (abs(rotationX) < 0.5 && abs(rotationY) < 0.5) {
       text("Bocarriba", width - 10, 90);
     }
-
-    if (speaking) {
-      fill(200);
-
-      // amplitudCambio = nf(amplitudMax - amplitudCruda, 1, 5);
-    } else {
-      fill(0);
-    }
   }
-  ellipse(mouseX, mouseY, width / 10);
   pop();
 }
 
@@ -200,11 +197,11 @@ function promedio(a_) {
 
 // --------------------------------------------------------------------------¿Hubo voz fuerte o débil?
 function nivelVoz() {
-  let incremento = 0.5;
+  //let incremento = 0.5;
 
   if (amplitudCambio > CAMBIONIVEL) {
-    nivelCambio = +incremento;
+    nivelCambio = +1;
   } else {
-    nivelCambio = -incremento;
+    nivelCambio = -0.5;
   }
 }
