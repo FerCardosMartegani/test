@@ -69,11 +69,7 @@ function draw() {
 
     // -------------------------------------------------Cálculos con la amplitud registrada
     let amplitudCruda = mic.getLevel();
-    if (amplitudCruda > amplitudMax) {
-      amplitudMax = amplitudCruda;
-    } else {
-      amplitudMax = lerp(amplitudMax, amplitudCruda, 0.05); //el máximo se reduce de a poco
-    }
+    amplitudMax = lerp(amplitudMax, amplitudCruda, 0.05); //el máximo suavizado
     amplitudes.push(amplitudMax);
 
     if (speaking) {
@@ -200,11 +196,10 @@ function promedio(a_) {
 
 // --------------------------------------------------------------------------¿Hubo voz fuerte o débil?
 function nivelVoz() {
-  //let incremento = 0.5;
 
   if (amplitudCambio > CAMBIONIVEL) {
     nivelCambio = +1;
   } else {
-    nivelCambio = -0.5;
+    nivelCambio = -float(1/3);
   }
 }
