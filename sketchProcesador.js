@@ -5,7 +5,7 @@ let amplitudMax,
   amplitudCambio,
   amplitudes,
   amplitudPromedioVoz,
-  amplitudPromedioSinVoz;
+  amplitudPromedioFondo;
 const CAMBIONIVEL = 0.15;
 
 let tiempo, tiempoMax;
@@ -29,7 +29,7 @@ function setup() {
     amplitudMax =
     amplitudCambio =
     amplitudPromedioVoz =
-    amplitudPromedioSinVoz =
+    amplitudPromedioFondo =
       -1;
   amplitudes = [];
   tiempoMax = TIEMPO * frameRate();
@@ -68,17 +68,18 @@ function draw() {
     } else {
       amplitudMax = lerp(amplitudMax, amplitudCruda, 0.05); //el máximo se reduce de a poco
     }
+
     if (speaking) {
       amplitudPromedioVoz = promedio(amplitudes);
     } else {
-      amplitudPromedioSinVoz = promedio(amplitudes);
+      amplitudPromedioFondo = promedio(amplitudes);
     }
 
     textAlign(LEFT, CENTER);
-    text("fondo: " + amplitudPromedioSinVoz, 10, 10);
+    text("fondo: " + amplitudPromedioFondo, 10, 10);
     text("total: " + amplitudPromedioVoz, 10, 30);
     text(
-      "diferencia: " + abs(amplitudPromedioVoz - amplitudPromedioSinVoz),
+      "diferencia: " + abs(amplitudPromedioVoz - amplitudPromedioFondo),
       10,
       50
     );
@@ -88,9 +89,9 @@ function draw() {
 
     // -------------------------------------------------Rotación del teléfono
     textAlign(RIGHT, CENTER);
-    text("Rotación X: " + rotationX, width - 10, 10);
-    text("Rotación Y: " + rotationY, width - 10, 30);
-    text("Rotación Z: " + rotationZ, width - 10, 50);
+    text("Rotación X: " + nf(rotationX, 1, 2), width - 10, 10);
+    text("Rotación Y: " + nf(rotationY, 1, 2), width - 10, 30);
+    text("Rotación Z: " + nf(rotationZ, 1, 2), width - 10, 50);
     text("Permiso: " + permisoDeSensor, width - 10, 70);
     if (abs(rotationX) < 10 && abs(rotationY) < 10) {
       text("Bocarriba", width - 10, 90);
@@ -150,7 +151,9 @@ function verificar() {
       nivelCambio = 0;
     }
 
-    amplitudes = [];
+    if (tiempoMax >= TIEMPO) {
+      amplitudes = [];
+    }
     tiempo = 0;
   }
 }
