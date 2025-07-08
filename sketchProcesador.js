@@ -68,7 +68,8 @@ function draw() {
     } else {
       amplitudMax = lerp(amplitudMax, amplitudCruda, 0.05); //el máximo se reduce de a poco
     }
-
+    amplitudes.push(amplitudMax);
+    
     if (speaking) {
       amplitudPromedioVoz = promedio(amplitudes);
     } else {
