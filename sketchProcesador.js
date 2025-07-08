@@ -7,7 +7,6 @@ let amplitudMax,
   amplitudPromedioVoz,
   amplitudPromedioFondo;
 const CAMBIONIVEL = 0.035;
-const INCREMENTO = 0.5;
 
 let tiempo, tiempoMax;
 const TIEMPO = 3;
@@ -79,10 +78,12 @@ function draw() {
 
     if (speaking) {
       amplitudPromedioVoz = promedio(amplitudes);
+      amplitudCambio = abs(amplitudPromedioVoz - amplitudPromedioFondo);
     } else {
       amplitudPromedioFondo = promedio(amplitudes);
+      amplitudCambio = 0;
     }
-    amplitudCambio = abs(amplitudPromedioVoz - amplitudPromedioFondo);
+    
 
     push();
     textAlign(LEFT, CENTER);
