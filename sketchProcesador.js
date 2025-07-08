@@ -65,9 +65,9 @@ function draw() {
     text("crudo: " + amplitudCruda, 10, 10);
     text("max: " + amplitudMax, 10, 30);
     text("promedio: " + amplitudPromedio, 10, 50);
-    text(speaking ? "Habla" : "No habla", 10, 70);
-    text("nivel: " + nivelDeCaos + " + " + nivelCambio, 10, 90);
-    text("output: " + getOutputVolume(), 10, 110);
+    text("Umbral: " + CAMBIONIVEL, 10, 70);
+    text(speaking ? "Habla" : "No habla", 10, 90);
+    text("nivel: " + nivelDeCaos + " + " + nivelCambio, 10, 110);
 
     // -------------------------------------------------Rotación del teléfono
     textAlign(RIGHT, CENTER);
