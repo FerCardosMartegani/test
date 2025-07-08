@@ -45,6 +45,8 @@ function setup() {
 function draw() {
   background(255);
 
+  text("ROTATION", width/2, height/2);
+
   // ---------------------------------------------------Reproducir ruido de fondo según nivel de caos
   nivelDeCaos = constrain(nivelDeCaos, 0, audios.length);
   let nivelInt = int(nivelDeCaos);
