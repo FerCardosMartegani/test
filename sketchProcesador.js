@@ -2,7 +2,7 @@ let mic, speaking, VAD;
 let audios, cantAudios, nivelDeCaos, nivelCambio;
 let debug, permisoDeSensor;
 let amplitudMax, amplitudCambio, amplitudes, amplitudPromedio;
-const CAMBIONIVEL = 0.2;
+const CAMBIONIVEL = 0.15;
 
 let tiempo, tiempoMax;
 const TIEMPO = 3;
