@@ -6,7 +6,7 @@ let amplitudMax,
   amplitudes,
   amplitudPromedioVoz,
   amplitudPromedioFondo;
-const CAMBIONIVEL = 0.035;
+const CAMBIONIVEL = 0.15;
 
 let tiempo, tiempoMax;
 const TIEMPO = 3;
@@ -33,7 +33,7 @@ function setup() {
       -1;
   amplitudes = [];
   tiempoMax = TIEMPO * frameRate();
-  nivelDeCaos = 4;
+  nivelDeCaos = 3;
   nivelCambio = 0;
   debug = permisoDeSensor = false;
 
@@ -43,8 +43,6 @@ function setup() {
 // --------------------------------------------------------------------------DRAW
 function draw() {
   background(255);
-
-  text("ROTATION", width/2, height/2);
 
   // ---------------------------------------------------Reproducir ruido de fondo según nivel de caos
   nivelDeCaos = constrain(nivelDeCaos, 0, audios.length);
@@ -59,33 +57,33 @@ function draw() {
     }
   }
 
-  if (
-    mic != undefined &&
-    VAD != undefined &&
-    abs(rotationX) < 0.5 &&
-    abs(rotationY) < 0.5
-  ) {
+  push();
+  if (mic != undefined && VAD != undefined) {
     verificar();
 
     // -------------------------------------------------Cálculos con la amplitud registrada
     let amplitudCruda = mic.getLevel();
-    amplitudMax = lerp(amplitudMax, amplitudCruda, 0.05); //el máximo suavizado
-    amplitudes.push(amplitudMax);
+    if (amplitudCruda > amplitudMax) {
+      amplitudMax = amplitudCruda;
+    } else {
+      amplitudMax = lerp(amplitudMax, amplitudCruda, 0.05); //el máximo se reduce de a poco
+    }
 
+    amplitudes.push(amplitudMax);
     if (speaking) {
       amplitudPromedioVoz = promedio(amplitudes);
-      amplitudCambio = abs(amplitudPromedioVoz - amplitudPromedioFondo);
     } else {
       amplitudPromedioFondo = promedio(amplitudes);
-      amplitudCambio = 0;
     }
-    
 
-    push();
     textAlign(LEFT, CENTER);
     text("fondo: " + amplitudPromedioFondo, 10, 10);
     text("total: " + amplitudPromedioVoz, 10, 30);
-    text("diferencia: " + amplitudCambio, 10, 50);
+    text(
+      "diferencia: " + abs(amplitudPromedioVoz - amplitudPromedioFondo),
+      10,
+      50
+    );
     text("Umbral: " + CAMBIONIVEL, 10, 70);
     text(speaking ? "Habla" : "No habla", 10, 90);
     text("nivel: " + nivelDeCaos + " + " + nivelCambio, 10, 110);
@@ -96,10 +94,19 @@ function draw() {
     text("Rotación Y: " + nf(rotationY, 1, 2), width - 10, 30);
     text("Rotación Z: " + nf(rotationZ, 1, 2), width - 10, 50);
     text("Permiso: " + permisoDeSensor, width - 10, 70);
-    if (abs(rotationX) < 0.5 && abs(rotationY) < 0.5) {
+    if (abs(rotationX) < 10 && abs(rotationY) < 10) {
       text("Bocarriba", width - 10, 90);
     }
+
+    if (speaking) {
+      fill(200);
+
+      // amplitudCambio = nf(amplitudMax - amplitudCruda, 1, 5);
+    } else {
+      fill(0);
+    }
   }
+  ellipse(mouseX, mouseY, width / 10);
   pop();
 }
 
@@ -196,10 +203,11 @@ function promedio(a_) {
 
 // --------------------------------------------------------------------------¿Hubo voz fuerte o débil?
 function nivelVoz() {
+  let incremento = 0.5;
 
-  if (amplitudCambio > CAMBIONIVEL) {
-    nivelCambio = +1;
+  if (amplitudPromedioVoz > CAMBIONIVEL) {
+    nivelCambio = +incremento;
   } else {
-    nivelCambio = -float(1/3);
+    nivelCambio = -incremento;
   }
 }
