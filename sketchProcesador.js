@@ -142,7 +142,6 @@ function verificar() {
 
       nivelVoz();
       nivelDeCaos += nivelCambio;
-      amplitudes = [];
 
       // ---------------------------------------------Reiniciar detector
     } else {
@@ -151,6 +150,7 @@ function verificar() {
       nivelCambio = 0;
     }
 
+    amplitudes = [];
     tiempo = 0;
   }
 }
