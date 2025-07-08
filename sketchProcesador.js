@@ -77,7 +77,11 @@ function draw() {
     textAlign(LEFT, CENTER);
     text("fondo: " + amplitudPromedioSinVoz, 10, 10);
     text("total: " + amplitudPromedioVoz, 10, 30);
-    text("diferencia: " + abs(amplitudPromedioVoz - amplitudPromedioSinVoz), 10, 50);
+    text(
+      "diferencia: " + abs(amplitudPromedioVoz - amplitudPromedioSinVoz),
+      10,
+      50
+    );
     text("Umbral: " + CAMBIONIVEL, 10, 70);
     text(speaking ? "Habla" : "No habla", 10, 90);
     text("nivel: " + nivelDeCaos + " + " + nivelCambio, 10, 110);
@@ -138,6 +142,7 @@ function verificar() {
 
       nivelVoz();
       nivelDeCaos += nivelCambio;
+      amplitudes = [];
 
       // ---------------------------------------------Reiniciar detector
     } else {
@@ -147,13 +152,6 @@ function verificar() {
     }
 
     tiempo = 0;
-  } else {
-    // ---------------------------------------------Registrar volumen para promediar
-    if (speaking) {
-      amplitudes.push(nf(amplitudMax, 1, 3));
-    } else {
-      amplitudes = [];
-    }
   }
 }
 
