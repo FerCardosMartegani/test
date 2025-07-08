@@ -6,7 +6,7 @@ let amplitudMax,
   amplitudes,
   amplitudPromedioVoz,
   amplitudPromedioFondo;
-const CAMBIONIVEL = 0.15;
+const CAMBIONIVEL = 0.035;
 
 let tiempo, tiempoMax;
 const TIEMPO = 3;
@@ -69,21 +69,18 @@ function draw() {
       amplitudMax = lerp(amplitudMax, amplitudCruda, 0.05); //el máximo se reduce de a poco
     }
     amplitudes.push(amplitudMax);
-    
+
     if (speaking) {
       amplitudPromedioVoz = promedio(amplitudes);
     } else {
       amplitudPromedioFondo = promedio(amplitudes);
     }
+    amplitudCambio = abs(amplitudPromedioVoz - amplitudPromedioFondo);
 
     textAlign(LEFT, CENTER);
     text("fondo: " + amplitudPromedioFondo, 10, 10);
     text("total: " + amplitudPromedioVoz, 10, 30);
-    text(
-      "diferencia: " + abs(amplitudPromedioVoz - amplitudPromedioFondo),
-      10,
-      50
-    );
+    text("diferencia: " + amplitudCambio, 10, 50);
     text("Umbral: " + CAMBIONIVEL, 10, 70);
     text(speaking ? "Habla" : "No habla", 10, 90);
     text("nivel: " + nivelDeCaos + " + " + nivelCambio, 10, 110);
@@ -205,7 +202,7 @@ function promedio(a_) {
 function nivelVoz() {
   let incremento = 0.5;
 
-  if (amplitudPromedioVoz > CAMBIONIVEL) {
+  if (amplitudCambio > CAMBIONIVEL) {
     nivelCambio = +incremento;
   } else {
     nivelCambio = -incremento;
