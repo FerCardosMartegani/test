@@ -12,7 +12,7 @@ function preload() {
   audios = [];
   for (let i = 0; i < 7; i++) {
     audios[i] = loadSound("./assets/nivel" + i + ".mp3");
-    audios[i].setVolume(0.4);
+    audios[i].setVolume(1);
   }
 }
 
