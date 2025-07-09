@@ -145,5 +145,5 @@ function verificar() {
 
 // --------------------------------------------------------------------------AGITAR PARA DESMUTEAR
 function deviceShaken() {
-  debug = false;
+  debug = !debug;
 }
