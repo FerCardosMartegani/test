@@ -63,6 +63,16 @@ function draw() {
     text("Suena: " + i + " " + audios[i].isPlaying(), 10, 100 + 10 * i);
   }
 
+  text(
+    nf(rotationX, 1, 2) +
+      " , " +
+      nf(rotationY, 1, 2) +
+      " , " +
+      nf(rotationZ, 1, 2),
+    10,
+    80
+  );
+
   let bocarriba = abs(rotationX) < 0.5 && abs(rotationY) < 0.5; //detectar si está en posición
   let iniciadio = mic != undefined && VAD != undefined; //detectar si todo inició correctamente
   if (bocarriba && iniciadio) {
@@ -111,13 +121,15 @@ function verificar() {
       vozActiva = false;
 
       // ---------------------------------------------¿Hubo voz fuerte o débil?
-      if (nivelVozMax > UMBRAL) {
-        nivelCambio = +1;
-      } else {
-        nivelCambio = -float(1 / 2);
-      }
+      if (nivelDeCaos > 0) {
+        if (nivelVozMax > UMBRAL) {
+          nivelCambio = +1;
+        } else {
+          nivelCambio = -float(1 / 2);
+        }
 
-      nivelDeCaos += nivelCambio;
+        nivelDeCaos += nivelCambio;
+      }
     } else {
       // ---------------------------------------------Reiniciar detector
       VAD.start();
