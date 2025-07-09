@@ -60,7 +60,7 @@ function draw() {
         audios[i].loop();
       }
     }
-    text("Suena: " + i, 10, 100 + 10 * i);
+    text("Suena: " + i + " " + audios[i].isPlaying(), 10, 100 + 10 * i);
   }
 
   let bocarriba = abs(rotationX) < 0.5 && abs(rotationY) < 0.5; //detectar si está en posición
