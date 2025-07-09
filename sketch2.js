@@ -14,6 +14,8 @@ let tiempo = 0;
 const TIEMPO = 3;
 let tiempoMax = TIEMPO;
 
+let tiempoStart = 0;
+
 let debug;
 
 // --------------------------------------------------------------------------PRELOAD
@@ -139,4 +141,9 @@ function verificar() {
 
     tiempo = 0;
   }
+}
+
+// --------------------------------------------------------------------------AGITAR PARA DESMUTEAR
+function deviceShaken() {
+  debug = false;
 }
