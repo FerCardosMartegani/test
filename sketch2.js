@@ -58,6 +58,7 @@ function draw() {
       if (!audios[i].isPlaying()) {
         audios[i].loop();
       }
+      break;
     }
   }
 
