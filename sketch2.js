@@ -5,9 +5,10 @@ let nivelFondo = 0;
 let vozActiva = false;
 let nivelVoz = 0,
   nivelVozMax = 0;
-let nivelDeCaos = 2;
+let nivelDeCaos = 2,
+  nivelCambio = 0;
 
-const CAMBIONIVEL = 0.11;
+const UMBRAL = 0.11;
 
 let tiempo = 0;
 const TIEMPO = 3;
@@ -78,8 +79,13 @@ function draw() {
         nivelVozMax = nivelVoz;
       }
       text("VOZ detectada. Nivel voz: " + nf(nivelVozMax, 1, 4), 10, 30);
-      text("Umbral: " + nf(CAMBIONIVEL, 1, 4), 10, 50);
+      text("Umbral: " + nf(UMBRAL, 1, 4), 10, 50);
     }
+    text(
+      "Nivel: " + nivelDeCaos + (vozActiva ? " + " + nivelCambio : ""),
+      10,
+      70
+    );
 
     // Visualización
     fill(vozActiva ? "green" : "gray");
@@ -106,7 +112,7 @@ function verificar() {
       vozActiva = false;
 
       // ---------------------------------------------¿Hubo voz fuerte o débil?
-      if (nivelVozMax > CAMBIONIVEL) {
+      if (nivelVozMax > UMBRAL) {
         nivelCambio = +1;
       } else {
         nivelCambio = -float(1 / 3);
