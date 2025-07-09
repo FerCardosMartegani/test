@@ -8,7 +8,7 @@ let nivelVoz = 0,
 const NIVEL_INICIAL = 2;
 let nivelDeCaos = NIVEL_INICIAL,
   nivelCambio = 0;
-let nivelAlcanzado = NIVEL_INICIAL;
+let nivelAlcanzado = false;
 
 const UMBRAL = 0.11;
 
@@ -106,7 +106,7 @@ function draw() {
       text("Umbral: " + nf(UMBRAL, 1, 4), 10, 50);
     }
     text(
-      "Nivel: " + nivelDeCaos + (vozActiva ? " + " + nivelCambio : ""),
+      "Nivel: " + nf(nivelDeCaos, 1,2) + (vozActiva ? " + " + nivelCambio : ""),
       10,
       70
     );
@@ -114,7 +114,7 @@ function draw() {
 }
 
 function touchStarted() {
-  // doDebug();
+  doDebug();
   getAudioContext().resume();
 }
 
@@ -133,20 +133,11 @@ function verificar() {
       if (nivelDeCaos > 0) {
         if (nivelDeCaos > nivelAlcanzado) {
           nivelAlcanzado = nivelDeCaos;
-          nivelAlcanzado = constrain(
-            nivelAlcanzado,
-            NIVEL_INICIAL,
-            audios.length - 1
-          );
         }
         if (nivelVozMax > UMBRAL) {
           nivelCambio = +1;
         } else {
-          nivelCambio = -float(
-            1 / map(nivelAlcanzado, NIVEL_INICIAL, audios.length - 1, 3, 1)
-          );
-          // 2  3  4  5
-          // 1/3 1/2 1/1
+          nivelCambio = nivelAlcanzado ? -1 : -float(1 / 2);
         }
 
         nivelDeCaos += nivelCambio;
