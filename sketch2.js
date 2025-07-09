@@ -20,7 +20,7 @@ function preload() {
   audios = [];
   for (let i = 0; i < 6; i++) {
     audios[i] = loadSound("./assets/" + i + ".mp3");
-    audios[i].setVolume(0.4);
+    // audios[i].setVolume(0.4);
   }
 }
 
@@ -46,32 +46,32 @@ async function setup() {
 
 // --------------------------------------------------------------------------DRAW
 function draw() {
-  if (mic != undefined && VAD != undefined) {
-    background(220);
+  background(220);
 
-    // ---------------------------------------------------Reproducir ruido de fondo según nivel de caos
-    nivelDeCaos = constrain(nivelDeCaos, 0, audios.length - 1);
-    let nivelInt = int(nivelDeCaos);
-    for (let i = 0; i < audios.length; i++) {
-      if (i != nivelInt || debug) {
-        audios[i].stop();
-      } else {
-        if (!audios[i].isPlaying()) {
-          audios[i].loop();
-        }
+  // ---------------------------------------------------Reproducir ruido de fondo según nivel de caos
+  nivelDeCaos = constrain(nivelDeCaos, 0, audios.length - 1);
+  let nivelInt = int(nivelDeCaos);
+  for (let i = 0; i < audios.length; i++) {
+    if (i != nivelInt || debug) {
+      audios[i].stop();
+    } else {
+      if (!audios[i].isPlaying()) {
+        audios[i].loop();
       }
     }
+  }
 
+  let bocarriba = abs(rotationX) < 0.5 && abs(rotationY) < 0.5; //detectar si está en posición
+  let iniciadio = mic != undefined && VAD != undefined; //detectar si todo inició correctamente
+  if (bocarriba && iniciadio) {
     let nivelActual = amp.getLevel();
 
     if (!vozActiva) {
-      // Promediamos lentamente para suavizar el fondo
-      nivelFondo = lerp(nivelFondo, nivelActual, 0.001);
+      nivelFondo = lerp(nivelFondo, nivelActual, 0.001); // ruido de fondo suavizado
       text("Ambiente (fondo): " + nf(nivelFondo, 1, 4), 10, 30);
       nivelVozMax = 0;
     } else {
-      // Diferencia entre volumen actual y fondo → voz
-      nivelVoz = nivelActual - nivelFondo;
+      nivelVoz = nivelActual - nivelFondo; // Diferencia entre volumen actual y fondo → voz
       nivelVoz = max(nivelVoz, 0); // por si es negativa
       if (nivelVoz > nivelVozMax) {
         nivelVozMax = nivelVoz;
@@ -105,10 +105,10 @@ function verificar() {
       vozActiva = false;
 
       // ---------------------------------------------¿Hubo voz fuerte o débil?
-      if (nivelVoz > CAMBIONIVEL) {
+      if (nivelVozMax > CAMBIONIVEL) {
         nivelCambio = +1;
       } else {
-        nivelCambio = -0.5;
+        nivelCambio = -float(1 / 3);
       }
 
       nivelDeCaos += nivelCambio;
