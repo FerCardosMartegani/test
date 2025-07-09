@@ -3,7 +3,7 @@ let audios;
 let mic, amp, VAD;
 let nivelFondo = 0;
 let vozActiva = false;
-let nivelVoz = 0;
+let nivelVoz = 0, nivelVozMax = 0;
 let nivelDeCaos = 2;
 
 const CAMBIONIVEL = 0.1;
@@ -70,7 +70,8 @@ function draw() {
     // Diferencia entre volumen actual y fondo → voz
     nivelVoz = nivelActual - nivelFondo;
     nivelVoz = max(nivelVoz, 0); // por si es negativa
-    text("VOZ detectada. Nivel voz: " + nf(nivelVoz, 1, 4), 10, 30);
+    nivelVozMax = max(nivelVoz, nivelVozMax);
+    text("VOZ detectada. Nivel voz: " + nf(nivelVozMax, 1, 4), 10, 30);
   }
 
   // Visualización
