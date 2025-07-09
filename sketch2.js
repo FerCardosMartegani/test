@@ -7,7 +7,7 @@ let nivelVoz = 0,
   nivelVozMax = 0;
 let nivelDeCaos = 2;
 
-const CAMBIONIVEL = 0.1;
+const CAMBIONIVEL = 0.11;
 
 let tiempo = 0;
 const TIEMPO = 3;
