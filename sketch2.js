@@ -76,13 +76,13 @@ function draw() {
     10,
     80
   );
-  bocabajo = accelerationZ < -9;
+  bocabajo = abs(rotationX) > 2.7 && abs(rotationY) < 0.2;  //detectar si está bocabajo
   if(bocabajo && !preBocabajo){
     doDebug();
   }
   preBocabajo = bocabajo;
 
-  let bocarriba = abs(rotationX) < 0.5 && abs(rotationY) < 0.5; //detectar si está en posición
+  let bocarriba = abs(rotationX) < 0.5 && abs(rotationY) < 0.5; //detectar si está bocarriba
   let iniciadio = mic != undefined && VAD != undefined; //detectar si todo inició correctamente
   if (bocarriba && iniciadio) {
     verificar();
