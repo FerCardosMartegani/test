@@ -77,6 +77,7 @@ function draw() {
         nivelVozMax = nivelVoz;
       }
       text("VOZ detectada. Nivel voz: " + nf(nivelVozMax, 1, 4), 10, 30);
+      text("Umbral: " + nf(CAMBIONIVEL, 1, 4), 10, 50);
     }
 
     // Visualización
