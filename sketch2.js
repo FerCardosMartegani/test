@@ -10,7 +10,9 @@ const CAMBIONIVEL = 0.1;
 
 let tiempo = 0;
 const TIEMPO = 3;
-let tiempoMax = TIEMPO * frameRate();
+let tiempoMax;
+
+let debug;
 
 // --------------------------------------------------------------------------PRELOAD
 function preload() {
@@ -37,6 +39,9 @@ async function setup() {
 
   VAD.start();
   textSize(16);
+
+  TIEMPO * frameRate();
+  debug = false;
 }
 
 // --------------------------------------------------------------------------DRAW
@@ -77,6 +82,7 @@ function draw() {
 }
 
 function touchStarted() {
+  debug = !debug;
   getAudioContext().resume();
 }
 
