@@ -21,13 +21,13 @@ function preload() {
   audios = [];
   for (let i = 0; i < 6; i++) {
     audios[i] = loadSound("./assets/" + i + ".mp3");
-    // audios[i].setVolume(0.4);
+    audios[i].setVolume(0.5);
   }
 }
 
 // --------------------------------------------------------------------------SETUP
 async function setup() {
-  createCanvas(400, 200);
+  createCanvas(windowWidth, windowHeight);
   mic = new p5.AudioIn();
   mic.start();
 
@@ -66,12 +66,17 @@ function draw() {
   let bocarriba = abs(rotationX) < 0.5 && abs(rotationY) < 0.5; //detectar si está en posición
   let iniciadio = mic != undefined && VAD != undefined; //detectar si todo inició correctamente
   if (bocarriba && iniciadio) {
+    verificar();
+    
     let nivelActual = amp.getLevel();
 
+    // ---------------------------------------------------Si NO hay voz...
     if (!vozActiva) {
       nivelFondo = lerp(nivelFondo, nivelActual, 0.001); // ruido de fondo suavizado
       text("Ambiente (fondo): " + nf(nivelFondo, 1, 4), 10, 30);
       nivelVozMax = 0;
+
+      // ---------------------------------------------------Si hay voz
     } else {
       nivelVoz = nivelActual - nivelFondo; // Diferencia entre volumen actual y fondo → voz
       nivelVoz = max(nivelVoz, 0); // por si es negativa
@@ -86,12 +91,6 @@ function draw() {
       10,
       70
     );
-
-    // Visualización
-    fill(vozActiva ? "green" : "gray");
-    rect(10, 60, nivelVoz * 300, 30);
-
-    verificar();
   }
 }
 
@@ -115,7 +114,7 @@ function verificar() {
       if (nivelVozMax > UMBRAL) {
         nivelCambio = +1;
       } else {
-        nivelCambio = -float(1 / 3);
+        nivelCambio = -float(1 / 2);
       }
 
       nivelDeCaos += nivelCambio;
