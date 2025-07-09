@@ -66,7 +66,7 @@ function draw() {
 
     if (!vozActiva) {
       // Promediamos lentamente para suavizar el fondo
-      nivelFondo = lerp(nivelFondo, nivelActual, 0.01);
+      nivelFondo = lerp(nivelFondo, nivelActual, 0.001);
       text("Ambiente (fondo): " + nf(nivelFondo, 1, 4), 10, 30);
       nivelVozMax = 0;
     } else {
