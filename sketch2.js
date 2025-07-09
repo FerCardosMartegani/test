@@ -5,8 +5,10 @@ let nivelFondo = 0;
 let vozActiva = false;
 let nivelVoz = 0,
   nivelVozMax = 0;
-let nivelDeCaos = 2,
+const NIVEL_INICIAL = 2;
+let nivelDeCaos = NIVEL_INICIAL,
   nivelCambio = 0;
+let nivelAlcanzado = NIVEL_INICIAL;
 
 const UMBRAL = 0.11;
 
@@ -45,8 +47,6 @@ async function setup() {
 
   VAD.start();
   textSize(16);
-
-  debug;
 }
 
 // --------------------------------------------------------------------------DRAW
@@ -72,12 +72,12 @@ function draw() {
       " , " +
       nf(rotationY, 1, 2) +
       " , " +
-      nf(accelerationZ, 1, 2),
+      nf(rotationZ, 1, 2),
     10,
-    80
+    90
   );
-  bocabajo = abs(rotationX) > 2.7 && abs(rotationY) < 0.2;  //detectar si está bocabajo
-  if(bocabajo && !preBocabajo){
+  bocabajo = abs(rotationX) > 2.7 && abs(rotationY) < 0.2; //detectar si está bocabajo
+  if (bocabajo && !preBocabajo) {
     doDebug();
   }
   preBocabajo = bocabajo;
@@ -114,7 +114,7 @@ function draw() {
 }
 
 function touchStarted() {
-  doDebug();
+  // doDebug();
   getAudioContext().resume();
 }
 
@@ -131,10 +131,22 @@ function verificar() {
 
       // ---------------------------------------------¿Hubo voz fuerte o débil?
       if (nivelDeCaos > 0) {
+        if (nivelDeCaos > nivelAlcanzado) {
+          nivelAlcanzado = nivelDeCaos;
+          nivelAlcanzado = constrain(
+            nivelAlcanzado,
+            NIVEL_INICIAL,
+            audios.length - 1
+          );
+        }
         if (nivelVozMax > UMBRAL) {
           nivelCambio = +1;
         } else {
-          nivelCambio = -float(1 / 2);
+          nivelCambio = -float(
+            1 / map(nivelAlcanzado, NIVEL_INICIAL, audios.length - 1, 3, 1)
+          );
+          // 2  3  4  5
+          // 1/3 1/2 1/1
         }
 
         nivelDeCaos += nivelCambio;
