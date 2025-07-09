@@ -10,7 +10,7 @@ const CAMBIONIVEL = 0.1;
 
 let tiempo = 0;
 const TIEMPO = 3;
-let tiempoMax;
+let tiempoMax = TIEMPO;
 
 let debug;
 
@@ -40,7 +40,6 @@ async function setup() {
   VAD.start();
   textSize(16);
 
-  TIEMPO * frameRate();
   debug = false;
 }
 
