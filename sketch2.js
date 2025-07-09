@@ -46,43 +46,45 @@ async function setup() {
 
 // --------------------------------------------------------------------------DRAW
 function draw() {
-  background(220);
+  if (mic != undefined && VAD != undefined) {
+    background(220);
 
-  // ---------------------------------------------------Reproducir ruido de fondo según nivel de caos
-  nivelDeCaos = constrain(nivelDeCaos, 0, audios.length - 1);
-  let nivelInt = int(nivelDeCaos);
-  for (let i = 0; i < audios.length; i++) {
-    if (i != nivelInt || debug) {
-      audios[i].stop();
-    } else {
-      if (!audios[i].isPlaying()) {
-        audios[i].loop();
+    // ---------------------------------------------------Reproducir ruido de fondo según nivel de caos
+    nivelDeCaos = constrain(nivelDeCaos, 0, audios.length - 1);
+    let nivelInt = int(nivelDeCaos);
+    for (let i = 0; i < audios.length; i++) {
+      if (i != nivelInt || debug) {
+        audios[i].stop();
+      } else {
+        if (!audios[i].isPlaying()) {
+          audios[i].loop();
+        }
       }
     }
-  }
 
-  let nivelActual = amp.getLevel();
+    let nivelActual = amp.getLevel();
 
-  if (!vozActiva) {
-    // Promediamos lentamente para suavizar el fondo
-    nivelFondo = lerp(nivelFondo, nivelActual, 0.01);
-    text("Ambiente (fondo): " + nf(nivelFondo, 1, 4), 10, 30);
-    nivelVozMax = 0;
-  } else {
-    // Diferencia entre volumen actual y fondo → voz
-    nivelVoz = nivelActual - nivelFondo;
-    nivelVoz = max(nivelVoz, 0); // por si es negativa
-    if (nivelVoz > nivelVozMax) {
-      nivelVozMax = nivelVoz;
+    if (!vozActiva) {
+      // Promediamos lentamente para suavizar el fondo
+      nivelFondo = lerp(nivelFondo, nivelActual, 0.01);
+      text("Ambiente (fondo): " + nf(nivelFondo, 1, 4), 10, 30);
+      nivelVozMax = 0;
+    } else {
+      // Diferencia entre volumen actual y fondo → voz
+      nivelVoz = nivelActual - nivelFondo;
+      nivelVoz = max(nivelVoz, 0); // por si es negativa
+      if (nivelVoz > nivelVozMax) {
+        nivelVozMax = nivelVoz;
+      }
+      text("VOZ detectada. Nivel voz: " + nf(nivelVozMax, 1, 4), 10, 30);
     }
-    text("VOZ detectada. Nivel voz: " + nf(nivelVozMax, 1, 4), 10, 30);
+
+    // Visualización
+    fill(vozActiva ? "green" : "gray");
+    rect(10, 60, nivelVoz * 300, 30);
+
+    verificar();
   }
-
-  // Visualización
-  fill(vozActiva ? "green" : "gray");
-  rect(10, 60, nivelVoz * 300, 30);
-
-  verificar();
 }
 
 function touchStarted() {
