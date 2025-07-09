@@ -21,7 +21,7 @@ function preload() {
   audios = [];
   for (let i = 0; i < 6; i++) {
     audios[i] = loadSound("./assets/" + i + ".mp3");
-    audios[i].setVolume(0.5);
+    // audios[i].setVolume(0.5);
   }
 }
 
@@ -59,7 +59,6 @@ function draw() {
       if (!audios[i].isPlaying()) {
         audios[i].loop();
       }
-      break;
     }
   }
 
@@ -67,7 +66,7 @@ function draw() {
   let iniciadio = mic != undefined && VAD != undefined; //detectar si todo inició correctamente
   if (bocarriba && iniciadio) {
     verificar();
-    
+
     let nivelActual = amp.getLevel();
 
     // ---------------------------------------------------Si NO hay voz...
