@@ -1,134 +1,54 @@
-let mic, speaking, VAD;
-let audios, cantAudios, nivelDeCaos, nivelCambio;
-let debug, permisoDeSensor;
-let amplitudMax,
-  amplitudCambio,
-  amplitudes,
-  amplitudPromedioVoz,
-  amplitudPromedioFondo;
-const CAMBIONIVEL = 0.15;
+let mic, amp, VAD;
+let nivelFondo = 0;
+let vozActiva = false;
+let nivelVoz = 0;
+
+const CAMBIONIVEL = 0.2;
 
 let tiempo, tiempoMax;
 const TIEMPO = 3;
 
-// --------------------------------------------------------------------------PRELOAD
-function preload() {
-  audios = [];
-  for (let i = 0; i < 7; i++) {
-    audios[i] = loadSound("./assets/nivel" + i + ".mp3");
-    audios[i].setVolume(1);
-  }
-}
-
-// -------------------------------------------------------------------------- SETUP
-function setup() {
-  createCanvas(windowWidth, windowHeight);
-
-  speaking = false;
-  tiempo =
-    amplitudMax =
-    amplitudCambio =
-    amplitudPromedioVoz =
-    amplitudPromedioFondo =
-      -1;
-  amplitudes = [];
-  tiempoMax = TIEMPO * frameRate();
-  nivelDeCaos = 3;
-  nivelCambio = 0;
-  debug = permisoDeSensor = false;
-
-  initVAD();
-}
-
-// --------------------------------------------------------------------------DRAW
-function draw() {
-  background(255);
-
-  // ---------------------------------------------------Reproducir ruido de fondo según nivel de caos
-  nivelDeCaos = constrain(nivelDeCaos, 0, audios.length);
-  let nivelInt = int(nivelDeCaos);
-  for (let i = 0; i < audios.length; i++) {
-    if (i != nivelInt || debug) {
-      audios[i].stop();
-    } else {
-      if (!audios[i].isPlaying()) {
-        audios[i].loop();
-      }
-    }
-  }
-
-  push();
-  if (mic != undefined && VAD != undefined) {
-    verificar();
-
-    // -------------------------------------------------Cálculos con la amplitud registrada
-    let amplitudCruda = mic.getLevel();
-    if (amplitudCruda > amplitudMax) {
-      amplitudMax = amplitudCruda;
-    } else {
-      amplitudMax = lerp(amplitudMax, amplitudCruda, 0.05); //el máximo se reduce de a poco
-    }
-
-    amplitudes.push(amplitudMax);
-    if (speaking) {
-      amplitudPromedioVoz = promedio(amplitudes);
-    } else {
-      amplitudPromedioFondo = promedio(amplitudes);
-    }
-
-    textAlign(LEFT, CENTER);
-    text("fondo: " + amplitudPromedioFondo, 10, 10);
-    text("total: " + amplitudPromedioVoz, 10, 30);
-    text(
-      "diferencia: " + abs(amplitudPromedioVoz - amplitudPromedioFondo),
-      10,
-      50
-    );
-    text("Umbral: " + CAMBIONIVEL, 10, 70);
-    text(speaking ? "Habla" : "No habla", 10, 90);
-    text("nivel: " + nivelDeCaos + " + " + nivelCambio, 10, 110);
-
-    // -------------------------------------------------Rotación del teléfono
-    textAlign(RIGHT, CENTER);
-    text("Rotación X: " + nf(rotationX, 1, 2), width - 10, 10);
-    text("Rotación Y: " + nf(rotationY, 1, 2), width - 10, 30);
-    text("Rotación Z: " + nf(rotationZ, 1, 2), width - 10, 50);
-    text("Permiso: " + permisoDeSensor, width - 10, 70);
-    if (abs(rotationX) < 10 && abs(rotationY) < 10) {
-      text("Bocarriba", width - 10, 90);
-    }
-
-    if (speaking) {
-      fill(200);
-
-      // amplitudCambio = nf(amplitudMax - amplitudCruda, 1, 5);
-    } else {
-      fill(0);
-    }
-  }
-  ellipse(mouseX, mouseY, width / 10);
-  pop();
-}
-
-// --------------------------------------------------------------------------DETECTOR DE VOZ
-async function initVAD() {
+async function setup() {
+  createCanvas(400, 200);
   mic = new p5.AudioIn();
   mic.start();
-  await mic.stream; // asegurar que el mic esté listo
+
+  amp = new p5.Amplitude();
+  amp.setInput(mic);
 
   VAD = await vad.MicVAD.new({
-    onSpeechStart: () => {
-      console.log("Voz detectada"); //Cuando detecta voz
-      speaking = true;
-    },
-    onSpeechEnd: () => {
-      console.log("Fin de voz"); //Cuando deja de detectar voz
-      speaking = false;
-      nivelVoz();
-    },
+    onSpeechStart: () => (vozActiva = true),
+    onSpeechEnd: () => (vozActiva = false),
   });
 
   VAD.start();
+  textSize(16);
+}
+
+function draw() {
+  background(220);
+  let nivelActual = amp.getLevel();
+
+  if (!vozActiva) {
+    // Promediamos lentamente para suavizar el fondo
+    nivelFondo = lerp(nivelFondo, nivelActual, 0.01);
+    text("Ambiente (fondo): " + nf(nivelFondo, 1, 4), 10, 30);
+  } else {
+    // Diferencia entre volumen actual y fondo → voz
+    nivelVoz = nivelActual - nivelFondo;
+    nivelVoz = max(nivelVoz, 0); // por si es negativa
+    text("VOZ detectada. Nivel voz: " + nf(nivelVoz, 1, 4), 10, 30);
+  }
+
+  // Visualización
+  fill(vozActiva ? "green" : "gray");
+  rect(10, 60, nivelVoz * 300, 30);
+
+  verificar();
+}
+
+function touchStarted() {
+  getAudioContext().resume();
 }
 
 // --------------------------------------------------------------------------REINICIAR DETECTOR CADA TANTO
@@ -137,12 +57,12 @@ function verificar() {
 
   if (tiempo >= tiempoMax * frameRate()) {
     // ---------------------------------------------Pausar detector
-    if (speaking) {
+    if (vozActiva) {
       VAD.pause();
       tiempoMax = 0.25;
-      speaking = false;
+      vozActiva = false;
 
-      nivelVoz();
+      // nivelVoz();
       nivelDeCaos += nivelCambio;
 
       // ---------------------------------------------Reiniciar detector
@@ -152,62 +72,6 @@ function verificar() {
       nivelCambio = 0;
     }
 
-    if (tiempoMax >= TIEMPO) {
-      amplitudes = [];
-    }
     tiempo = 0;
-  }
-}
-
-// --------------------------------------------------------------------------MOUSE
-function mouseClicked() {
-  console.log("Clicked");
-
-  debug = !debug;
-}
-
-function touchStarted() {
-  if (
-    typeof DeviceMotionEvent !== "undefined" &&
-    typeof DeviceMotionEvent.requestPermission === "function"
-  ) {
-    DeviceMotionEvent.requestPermission()
-      .then((response) => {
-        if (response === "granted") {
-          console.log("Permiso de movimiento");
-          permisoDeSensor = true;
-        } else {
-          console.log("SIN permiso de movimiento");
-          permisoDeSensor = false;
-        }
-      })
-      .catch(console.error);
-  } else {
-    // En otros navegadores (como Android Firefox o computadoras), no se necesita
-    console.log("Permiso no necesario en este navegador");
-  }
-
-  // También activamos audio si es necesario
-  getAudioContext().resume();
-}
-
-// --------------------------------------------------------------------------PROMEDIAR ARRAY
-function promedio(a_) {
-  let suma = 0;
-  for (let i = 0; i < a_.length; i++) {
-    suma += float(a_[i]);
-  }
-  let resultado = suma / a_.length;
-  return resultado;
-}
-
-// --------------------------------------------------------------------------¿Hubo voz fuerte o débil?
-function nivelVoz() {
-  let incremento = 0.5;
-
-  if (amplitudPromedioVoz > CAMBIONIVEL) {
-    nivelCambio = +incremento;
-  } else {
-    nivelCambio = -incremento;
   }
 }
