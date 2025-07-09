@@ -16,7 +16,9 @@ let tiempoMax = TIEMPO;
 
 let tiempoStart = 0;
 
-let debug;
+let debug = false;
+let bocabajo = false;
+let preBocabajo = false;
 
 // --------------------------------------------------------------------------PRELOAD
 function preload() {
@@ -44,7 +46,7 @@ async function setup() {
   VAD.start();
   textSize(16);
 
-  debug = false;
+  debug;
 }
 
 // --------------------------------------------------------------------------DRAW
@@ -62,7 +64,7 @@ function draw() {
         audios[i].loop();
       }
     }
-    text("Suena: " + i + " " + audios[i].isPlaying(), 10, 100 + 10 * i);
+    // text("Suena: " + i + " " + audios[i].isPlaying(), 10, 100 + 10 * i);
   }
 
   text(
@@ -70,10 +72,15 @@ function draw() {
       " , " +
       nf(rotationY, 1, 2) +
       " , " +
-      nf(rotationZ, 1, 2),
+      nf(accelerationZ, 1, 2),
     10,
     80
   );
+  bocabajo = accelerationZ < -9;
+  if(bocabajo && !preBocabajo){
+    doDebug();
+  }
+  preBocabajo = bocabajo;
 
   let bocarriba = abs(rotationX) < 0.5 && abs(rotationY) < 0.5; //detectar si está en posición
   let iniciadio = mic != undefined && VAD != undefined; //detectar si todo inició correctamente
@@ -107,7 +114,7 @@ function draw() {
 }
 
 function touchStarted() {
-  debug = !debug;
+  doDebug();
   getAudioContext().resume();
 }
 
@@ -144,6 +151,6 @@ function verificar() {
 }
 
 // --------------------------------------------------------------------------AGITAR PARA DESMUTEAR
-function deviceShaken() {
+function doDebug() {
   debug = !debug;
 }
