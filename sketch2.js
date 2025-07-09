@@ -130,7 +130,7 @@ function verificar() {
       vozActiva = false;
 
       // ---------------------------------------------¿Hubo voz fuerte o débil?
-      if (nivelDeCaos > 0) {
+      if (nivelDeCaos > 0 && !debug) {
         if (nivelDeCaos > nivelAlcanzado) {
           nivelAlcanzado = nivelDeCaos;
         }
