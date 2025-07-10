@@ -10,7 +10,7 @@ let nivelDeCaos = NIVEL_INICIAL,
   nivelCambio = 0;
 let nivelAlcanzado = false;
 
-const UMBRAL = 0.2;
+const UMBRAL = 0.3;
 
 let tiempo = 0;
 const TIEMPO = 3;
