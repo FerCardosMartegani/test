@@ -55,7 +55,7 @@ function draw() {
 
   // ---------------------------------------------------Reproducir ruido de fondo según nivel de caos
   nivelDeCaos = constrain(nivelDeCaos, 0, audios.length - 1);
-  let nivelInt = int(nivelDeCaos);
+  let nivelInt = ceil(nivelDeCaos);
   for (let i = 0; i < audios.length; i++) {
     if (i != nivelInt || debug) {
       audios[i].stop();
