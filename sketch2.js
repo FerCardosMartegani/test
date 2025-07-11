@@ -135,7 +135,7 @@ function verificar() {
           nivelAlcanzado = nivelDeCaos;
         }
         if (nivelVozMax > UMBRAL) {
-          nivelCambio = +1;
+          //nivelCambio = +1;
         } else {
           nivelCambio = nivelAlcanzado >= audios.length-1 ? -1 : -float(1 / 2);
         }
