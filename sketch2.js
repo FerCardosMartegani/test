@@ -91,7 +91,7 @@ function draw() {
 
     // ---------------------------------------------------Si NO hay voz...
     if (!vozActiva) {
-      nivelFondo = lerp(nivelFondo, nivelActual, 0.01); // ruido de fondo suavizado
+      nivelFondo = lerp(nivelFondo, nivelActual, 0.001); // ruido de fondo suavizado
       text("Ambiente (fondo): " + nf(nivelFondo, 1, 4), 10, 30);
       nivelVozMax = 0;
 
