@@ -10,7 +10,7 @@ let nivelDeCaos = NIVEL_INICIAL,
   nivelCambio = 0;
 let nivelAlcanzado = false;
 
-const UMBRAL = 0.25;
+const UMBRAL = 0.29;
 
 let tiempo = 0;
 const TIEMPO = 3;
@@ -135,12 +135,12 @@ function verificar() {
           nivelAlcanzado = nivelDeCaos;
         }
         if (nivelVozMax > UMBRAL) {
-          //nivelCambio = +1;
+          nivelCambio = +1;
         } else {
           nivelCambio = nivelAlcanzado >= audios.length-1 ? -1 : -float(1 / 2);
         }
 
-        nivelDeCaos += nivelCambio;
+        //nivelDeCaos += nivelCambio;
       }
     } else {
       // ---------------------------------------------Reiniciar detector
