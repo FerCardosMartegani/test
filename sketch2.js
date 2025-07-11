@@ -11,8 +11,8 @@ let nivelDeCaos = NIVEL_INICIAL,
 let nivelAlcanzado = false;
 
 let UMBRAL;
-const UMBRAL1 = 0.12;
-const UMBRAL2 = 0.34;
+const UMBRAL1 = 0.15;
+const UMBRAL2 = 0.35;
 
 let tiempo = 0;
 const TIEMPO = 3;
