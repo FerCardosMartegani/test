@@ -10,7 +10,7 @@ let nivelDeCaos = NIVEL_INICIAL,
   nivelCambio = 0;
 let nivelAlcanzado = false;
 
-const UMBRAL = 0.29;
+const UMBRAL = 0.09;
 
 let tiempo = 0;
 const TIEMPO = 3;
@@ -140,7 +140,7 @@ function verificar() {
           nivelCambio = nivelAlcanzado >= audios.length-1 ? -1 : -float(1 / 2);
         }
 
-        //nivelDeCaos += nivelCambio;
+        nivelDeCaos += nivelCambio;
       }
     } else {
       // ---------------------------------------------Reiniciar detector
