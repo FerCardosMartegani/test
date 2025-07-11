@@ -12,7 +12,7 @@ let nivelAlcanzado = false;
 
 let UMBRAL;
 const UMBRAL1 = 0.11;
-const UMBRAL2 = 0.32;
+const UMBRAL2 = 0.34;
 
 let tiempo = 0;
 const TIEMPO = 3;
