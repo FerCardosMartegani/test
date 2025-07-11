@@ -10,7 +10,9 @@ let nivelDeCaos = NIVEL_INICIAL,
   nivelCambio = 0;
 let nivelAlcanzado = false;
 
-const UMBRAL = 0.25;
+let UMBRAL;
+const UMBRAL1 = 0.1;
+const UMBRAL2 = 0.3;
 
 let tiempo = 0;
 const TIEMPO = 3;
@@ -66,6 +68,7 @@ function draw() {
     }
     // text("Suena: " + i + " " + audios[i].isPlaying(), 10, 100 + 10 * i);
   }
+  UMBRAL = map(nivelDeCaos, 2, audios.length-1, UMBRAL1, UMBRAL2);
 
   text(
     nf(rotationX, 1, 2) +
