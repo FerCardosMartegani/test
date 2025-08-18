@@ -24,6 +24,9 @@ let debug = false;
 let bocabajo = false;
 let preBocabajo = false;
 
+let reset_tiempo = 0;
+let reset_delay = 15;
+
 // --------------------------------------------------------------------------PRELOAD
 function preload() {
   audios = [];
@@ -68,7 +71,11 @@ function draw() {
     }
     // text("Suena: " + i + " " + audios[i].isPlaying(), 10, 100 + 10 * i);
   }
-  UMBRAL = constrain(map(nivelDeCaos, NIVEL_INICIAL, audios.length-1, UMBRAL1, UMBRAL2), UMBRAL1, UMBRAL2);
+  UMBRAL = constrain(
+    map(nivelDeCaos, NIVEL_INICIAL, audios.length - 1, UMBRAL1, UMBRAL2),
+    UMBRAL1,
+    UMBRAL2
+  );
 
   text(
     nf(rotationX, 1, 2) +
@@ -87,32 +94,42 @@ function draw() {
 
   let bocarriba = /* abs(rotationX) < 0.5 && */ abs(rotationY) > 1.2; //detectar si está bocarriba
   let iniciado = mic != undefined && VAD != undefined; //detectar si todo inició correctamente
-  if (bocarriba && iniciado) {
-    verificar();
+  if (iniciado) {
+    if (bocarriba) {
+      verificar();
 
-    let nivelActual = amp.getLevel();
+      let nivelActual = amp.getLevel();
 
-    // ---------------------------------------------------Si NO hay voz...
-    if (!vozActiva) {
-      nivelFondo = lerp(nivelFondo, nivelActual, 0.001); // ruido de fondo suavizado
-      text("Ambiente (fondo): " + nf(nivelFondo, 1, 4), 10, 30);
-      nivelVozMax = 0;
+      // ---------------------------------------------------Si NO hay voz...
+      if (!vozActiva) {
+        nivelFondo = lerp(nivelFondo, nivelActual, 0.001); // ruido de fondo suavizado
+        text("Ambiente (fondo): " + nf(nivelFondo, 1, 4), 10, 30);
+        nivelVozMax = 0;
 
-      // ---------------------------------------------------Si hay voz
-    } else {
-      nivelVoz = nivelActual - nivelFondo; // Diferencia entre volumen actual y fondo → voz
-      nivelVoz = max(nivelVoz, 0); // por si es negativa
-      if (nivelVoz > nivelVozMax) {
-        nivelVozMax = nivelVoz;
+        // ---------------------------------------------------Si hay voz
+      } else {
+        nivelVoz = nivelActual - nivelFondo; // Diferencia entre volumen actual y fondo → voz
+        nivelVoz = max(nivelVoz, 0); // por si es negativa
+        if (nivelVoz > nivelVozMax) {
+          nivelVozMax = nivelVoz;
+        }
+        text("VOZ detectada. Nivel voz: " + nf(nivelVozMax, 1, 4), 10, 30);
+        text("Umbral: " + nf(UMBRAL, 1, 4), 10, 50);
       }
-      text("VOZ detectada. Nivel voz: " + nf(nivelVozMax, 1, 4), 10, 30);
-      text("Umbral: " + nf(UMBRAL, 1, 4), 10, 50);
+      text(
+        "Nivel: " +
+          nf(nivelDeCaos, 1, 2) +
+          (vozActiva ? " + " + nivelCambio : ""),
+        10,
+        70
+      );
+    } else if(nivelDeCaos <= 0){
+      reset_tiempo++;
+
+      if(reset_tiempo >= reset_delay*frameRate()){
+        setup();
+      }
     }
-    text(
-      "Nivel: " + nf(nivelDeCaos, 1,2) + (vozActiva ? " + " + nivelCambio : ""),
-      10,
-      70
-    );
   }
 }
 
@@ -140,7 +157,8 @@ function verificar() {
         if (nivelVozMax > UMBRAL) {
           nivelCambio = +1;
         } else {
-          nivelCambio = nivelAlcanzado >= audios.length-1 ? -1 : -float(1 / 2);
+          nivelCambio =
+            nivelAlcanzado >= audios.length - 1 ? -1 : -float(1 / 2);
         }
 
         nivelDeCaos += nivelCambio;
