@@ -124,7 +124,7 @@ function draw() {
         70
       );
     } else if (nivelDeCaos <= 0) {
-      text("Reiniciando..." + reset_tiempo);
+      text("Reiniciando..." + reset_tiempo, 10, 100);
       reset_tiempo++;
 
       if (reset_tiempo >= reset_delay * frameRate()) {
