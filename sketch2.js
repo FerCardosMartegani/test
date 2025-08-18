@@ -123,11 +123,32 @@ function draw() {
         10,
         70
       );
-    } else if(nivelDeCaos <= 0){
+    } else if (nivelDeCaos <= 0) {
+      text("Reiniciando..." + reset_tiempo);
       reset_tiempo++;
 
-      if(reset_tiempo >= reset_delay*frameRate()){
-        setup();
+      if (reset_tiempo >= reset_delay * frameRate()) {
+        nivelFondo = 0;
+        vozActiva = false;
+        nivelVoz = 0;
+        nivelVozMax = 0;
+        nivelDeCaos = NIVEL_INICIAL;
+        nivelCambio = 0;
+        nivelAlcanzado = false;
+
+        tiempo = 0;
+
+        tiempoMax = TIEMPO;
+
+        tiempoStart = 0;
+
+        bocabajo = false;
+        preBocabajo = false;
+
+        reset_tiempo = 0;
+        reset_delay = 15;
+
+        VAD.start();
       }
     }
   }
