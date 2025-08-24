@@ -1,5 +1,10 @@
 let audios;
 
+let bocinas;
+let bocina = 0,
+  bocinaActual = 0,
+  bocinaBool = true;
+
 let mic, amp, VAD;
 let nivelFondo = 0;
 let vozActiva = false;
@@ -33,6 +38,12 @@ function preload() {
   for (let i = 0; i < 6; i++) {
     audios[i] = loadSound("./assets/" + i + ".mp3");
     // audios[i].setVolume(0.5);
+  }
+
+  bocinas = [];
+  for (let i = 0; i < 3; i++) {
+    bocinas[i] = loadSound("./assets/v" + (i + 1) + ".mp3");
+    // bocinas[i].setVolume(0.5);
   }
 }
 
@@ -96,7 +107,7 @@ function draw() {
   let iniciado = mic != undefined && VAD != undefined; //detectar si todo inició correctamente
   if (iniciado) {
     if (bocarriba) {
-      verificar();
+      actualizar();
 
       let nivelActual = amp.getLevel();
 
@@ -115,6 +126,19 @@ function draw() {
         }
         text("VOZ detectada. Nivel voz: " + nf(nivelVozMax, 1, 4), 10, 30);
         text("Umbral: " + nf(UMBRAL, 1, 4), 10, 50);
+
+        bocina += random([-1, +1]); //Cambiar el bocinazo que suena al hablar
+        if (bocina >= bocinas.length) {
+          bocina = 0;
+        } else if (bocina < 0) {
+          bocina = bocinas.length - 1;
+        }
+        if (bocinaBool) {
+          bocinaActual = bocinas[bocina];
+          bocinaActual.play();
+
+          bocinaBool = false;
+        }
       }
       text(
         "Nivel: " +
@@ -124,6 +148,7 @@ function draw() {
         70
       );
     } else if (nivelDeCaos <= 0) {
+      // ---------------------------------------------------RESET
       text("Reiniciando..." + reset_tiempo, 10, 100);
       reset_tiempo++;
 
@@ -160,7 +185,7 @@ function touchStarted() {
 }
 
 // --------------------------------------------------------------------------REINICIAR DETECTOR CADA TANTO
-function verificar() {
+function actualizar() {
   tiempo++;
 
   if (tiempo >= tiempoMax * frameRate()) {
@@ -183,6 +208,10 @@ function verificar() {
         }
 
         nivelDeCaos += nivelCambio;
+      }
+
+      if (!bocinaActual.isPlaying()) {
+        bocinaBool = true;
       }
     } else {
       // ---------------------------------------------Reiniciar detector
