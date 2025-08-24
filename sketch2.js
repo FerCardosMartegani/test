@@ -133,8 +133,11 @@ function draw() {
         } else if (bocina < 0) {
           bocina = bocinas.length - 1;
         }
-        if (bocinaBool) {
+        if (bocinaBool || !bocinaActual.isPlaying()) {
           bocinaActual = bocinas[bocina];
+          if (nivelActual < NIVEL_INICIAL) {
+            bocinaActual.setVolume(0.5);
+          }
           bocinaActual.play();
 
           bocinaBool = false;
@@ -211,9 +214,7 @@ function actualizar() {
         nivelDeCaos += nivelCambio;
       }
 
-      if (!bocinaActual.isPlaying()) {
-        bocinaBool = true;
-      }
+      bocinaBool = true;
     } else {
       // ---------------------------------------------Reiniciar detector
       VAD.start();
