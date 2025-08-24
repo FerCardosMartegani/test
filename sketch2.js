@@ -139,6 +139,7 @@ function draw() {
 
           bocinaBool = false;
         }
+        text("Voz de bocina: " + bocina, 10, 120);
       }
       text(
         "Nivel: " +
