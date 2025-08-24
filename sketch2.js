@@ -151,6 +151,8 @@ function draw() {
         10,
         70
       );
+
+      reset_tiempo = 0;
     } else if (nivelDeCaos <= 0) {
       // ---------------------------------------------------RESET
       text("Reiniciando..." + reset_tiempo, 10, 100);
