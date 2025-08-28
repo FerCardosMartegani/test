@@ -127,20 +127,24 @@ function draw() {
         text("VOZ detectada. Nivel voz: " + nf(nivelVozMax, 1, 4), 10, 30);
         text("Umbral: " + nf(UMBRAL, 1, 4), 10, 50);
 
-        bocina += random([-1, +1]); //Cambiar el bocinazo que suena al hablar
-        if (bocina >= bocinas.length) {
-          bocina = 0;
-        } else if (bocina < 0) {
-          bocina = bocinas.length - 1;
-        }
-        if (bocinaBool || !bocinaActual.isPlaying()) {
-          bocinaActual = bocinas[bocina];
-          if (nivelActual < NIVEL_INICIAL) {
-            bocinaActual.setVolume(0.5);
+        if (nivelDeCaos <= 0) {
+          bocina += random([-1, +1]); //Cambiar el bocinazo que suena al hablar
+          if (bocina >= bocinas.length) {
+            bocina = 0;
+          } else if (bocina < 0) {
+            bocina = bocinas.length - 1;
           }
-          bocinaActual.play();
+          if (bocinaBool || !bocinaActual.isPlaying()) {
+            bocinaActual = bocinas[bocina];
+            if (nivelActual < NIVEL_INICIAL) {
+              bocinaActual.setVolume(0.5);
+            }else{
+              bocinaActual.setVolume(0.75);
+            }
+            bocinaActual.play();
 
-          bocinaBool = false;
+            bocinaBool = false;
+          }
         }
         text("Voz de bocina: " + bocina, 10, 120);
       }
@@ -151,6 +155,7 @@ function draw() {
         10,
         70
       );
+      text("Versión: " + timestamp, 10, 140);
 
       reset_tiempo = 0;
     } else if (nivelDeCaos <= 0) {
