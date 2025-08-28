@@ -137,10 +137,10 @@ function draw() {
           }
           if (bocinaBool || !bocinaActual.isPlaying()) {
             bocinaActual = bocinas[bocina];
-            if (nivelActual < NIVEL_INICIAL) {
+            if (nivelActual <= NIVEL_INICIAL) {
               bocinaActual.setVolume(0.5);
             } else {
-              bocinaActual.setVolume(0.75);
+              bocinaActual.setVolume(1);
             }
             bocinaActual.play();
 
