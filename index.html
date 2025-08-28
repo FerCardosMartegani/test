@@ -19,10 +19,11 @@
   </head>
 
   <body>
-    <!-- <script src="sketch2.js"></script> -->
+    <!-- <script src="sketch.js"></script> -->
     <script>
       const script = document.createElement("script");
-      script.src = "sketch2.js?v=" + Date.now(); // agrega timestamp único
+      const timestamp = Date.now();
+      script.src = "sketch.js?v=" + timestamp; // agrega timestamp único
       document.body.appendChild(script);
     </script>
   </body>
