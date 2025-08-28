@@ -107,7 +107,7 @@ function draw() {
   let bocarriba = /* abs(rotationX) < 0.5 && */ abs(rotationY) > 1.2; //detectar si está bocarriba
   let iniciadio = mic != undefined && VAD != undefined; //detectar si todo inició correctamente
   if (iniciadio) {
-    if (bocarriba || (!keyIsDown(32))) {
+    if (bocarriba) {
       verificar();
 
       let nivelActual = amp.getLevel();
