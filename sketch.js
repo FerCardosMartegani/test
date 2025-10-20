@@ -3,7 +3,7 @@ let lastAngle = 0
 
 // ------------------------------------------------------------------------------------------------------SETUP
 function setup() {
-  // createCanvas(400, 400);
+  createCanvas(400, 400);
 
   if (typeof DeviceOrientationEvent.requestPermission === 'function') {
     createButton('Activar sensores').mousePressed(() => {
@@ -20,7 +20,9 @@ function setup() {
 
 // ------------------------------------------------------------------------------------------------------DRAW
 function draw() {
-  // background(220);
+  background(220);
+
+  text(lastAngle, width/2, height/2);
 }
 
 // ------------------------------------------------------------------------------------------------------ROTATION
